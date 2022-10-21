@@ -1,0 +1,2 @@
+localhost: 3000/api/user ->>> usercontroller's index function
+3000/api/user/show ->> usercontroller's show function

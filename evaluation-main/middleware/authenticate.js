@@ -1,10 +1,18 @@
 const jwt = require('jsonwebtoken')
+
 const authenticate = (req,res,next)=>{
     try{
         const token = req.headers.authorization.split(' ')[1]
-        const decode = jwt.verify(token, 'secretValue')
+        jwt.verify(token, 'secretValue',(err,user)=>{ 
+            if (err) return res.status(401).send(err);
+            req.user = user;
+            console.log(user)
+        }
 
-        req.user = decode
+        )
+
+
+        
         next()
     }
     catch(error)
@@ -36,3 +44,22 @@ const authenticate = (req,res,next)=>{
 
 module.exports = authenticate 
 //,isLogout
+
+
+
+// const jwt = require("jsonwebtoken"); //to verify token
+
+// //function to authenticate the user to give access to necessary operation
+// function authenticate(req, res, next) {
+//     const header = req.headers["authorization"];
+//     const token = header && header.split(" ")[1];
+//     if (token == null) return res.send("Authentication header not found");
+//     jwt.verify(token,'secretValue', (err, user) => {
+//         if (err) return res.status(401).send(err);
+//         req.user = user;
+//     });
+//     console.log(req.user);
+//     next();
+// }
+
+// module.exports = authenticate;

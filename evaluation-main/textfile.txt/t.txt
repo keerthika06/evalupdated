@@ -1,2 +1,7 @@
 localhost: 3000/api/user ->>> usercontroller's index function
 3000/api/user/show ->> usercontroller's show function
+
+
+generate otp ,verify , change passw --->>>>>>forgot
+
+login,  reset ---->>>>>reset

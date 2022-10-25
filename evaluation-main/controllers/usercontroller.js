@@ -24,10 +24,11 @@ const show = (req, res, next)=>{
         res.json({
             response
         })
+    })
     .catch(error=> {
         res.json({
         message: 'AN error occured'
-    })
+
 })
 }) 
 }
@@ -96,31 +97,12 @@ const update = (req,res,next) =>{
 //     }
 // }
 
-const logout = async (req,res)=> {
-        if(req.headers && req.headers.authorization) {
-            const token = req.headers.authorization.split(' ')[1]
-            if(!token){
-                return res
-                .status(401)
-                .json({sucess:false, message: 'Authorization fail'})
-            }
-            const tokens = req.user.tokens
-
-            // const newTokens = tokens.filter(t => t !== token)
-
-            await User.findOneAndUpdate(req.MobileNumber
-                //, {tokens : newTokens}
-                )
-            res.json({sucess: true ,message : 'sign out sucessfully'})
-
-        }
-    }
 
 
 
 
 
 module.exports = {
-    index,show,store,update,logout
+    index,show,store,update
 
 }

@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const otpGenerator = require('otp-generator')
 
 const register = ( req,res,next) => {
     bcrypt.hash(req.body.MPin.toString(),10, function(err, hashedPass){
@@ -110,7 +111,60 @@ const refreshToken = (req,res,next)=> {
         }
     })
 }
+// const generateotp = (req,res,next) => {
+//     const 
+// }
+
+let logout = async (req, res) => {
+    try {
+        
+        const userToken = await User.findOne({
+            RefreshToken: req.body.refreshToken,
+        }); // finding document with the matched refresh token
+        if (!userToken) {
+            return res.status(200).json({
+                error: false,
+                message: "You have logged out already!",
+            }); // if no user exists, by default return logged out
+        } else {
+            await User.findOneAndUpdate(
+                { RefreshToken: req.body.refreshToken },
+                { RefreshToken: "" }
+            );
+            res.json({ error: false, message: "Logged out successfully" });
+        }
+    } catch (err) {
+        res.json({ error: true, message: err.message });
+    }
+};
+
+
+let resetPassword = async(req,res)=>{
+    try {
+                hashedPass = await bcrypt.hash(req.body.MPin,10)
+            await User.findOneAndUpdate({
+                MobileNumber: req.body.MobileNumber
+            },{
+                MPin: hashedPass
+            })
+            res.send("PASSWORD SUCESSFULLY RESET")
+    } catch (error) {
+        res.send(error.message)
+    }
+}
+
+
+
+const l = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
+console.log(l)
+
+
+
+
+
+
+
 
 module.exports = {
-    register, login , refreshToken
+    register, login , refreshToken , logout , resetPassword
 }

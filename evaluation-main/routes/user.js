@@ -7,7 +7,7 @@ router.get('/', authenticate, userController.index)
 router.post('/show',userController.show)
 router.post('/store',userController.store)
 router.put('/update',userController.update)
-router.post('/logout',authenticate,userController.logout)
+//router.post('/logout',authenticate,userController.logout)
 
 // router.get('/logout', authenticate, async(req, res)=>{
 

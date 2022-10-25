@@ -72,6 +72,8 @@ const update = (req,res,next) =>{
     })
 }
 
+
+
 //logout
 // const logout = (req,res) =>{
 //     if(req.headers && req.headers.authorization){

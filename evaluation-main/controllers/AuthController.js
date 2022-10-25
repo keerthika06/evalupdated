@@ -2,7 +2,7 @@ const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const otpGenerator = require('otp-generator')
-
+const speakeasy=require("speakeasy")
 const register = ( req,res,next) => {
     bcrypt.hash(req.body.MPin.toString(),10, function(err, hashedPass){
         if(err) {
@@ -139,6 +139,62 @@ let logout = async (req, res) => {
 };
 
 
+
+const sendOTP = async (req, res) => {
+    try {
+        const secret = speakeasy.generateSecret({ length: 10 });
+        res.send({
+            OTP: speakeasy.totp({
+                secret: secret.base32,
+                encoding: "base32",
+                step: 60,
+            }),
+            secret: secret.base32,
+        });
+    } catch (err) {
+        res.json({ message: err.message });
+    }
+};
+
+//verification of number using speakeasy
+let verifyNum = async (req, res, next) => {
+    try {
+        const result = speakeasy.totp.verify({
+            secret: req.body.secret,
+            encoding: "base32",
+            token: req.body.OTP,
+            window: 0,
+            step: 60,
+        });
+        if (result) {
+            // res.send({
+            //     message: "Verified",
+            // });
+            next();
+        } else {
+            res.json({ message: "Verification unsuccessful" });
+        }
+    } catch (err) {
+        res.json({ message: err.message });
+    }
+};
+//function to forgot password
+let forgotPass = async (req, res) => {
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const newmPin = await bcrypt.hash(req.body.MPin, 10);
+        await User.findOneAndUpdate(
+            { MobileNumber: req.body.MobileNumber },
+            { MPin: newmPin }
+        );
+        res.json({ message: "MPin changed successfully" });
+    } catch (err) {
+        res.json({ message: err.message });
+    }
+};
+
+
+
 let resetPassword = async(req,res)=>{
     try {
                 hashedPass = await bcrypt.hash(req.body.MPin,10)
@@ -155,8 +211,8 @@ let resetPassword = async(req,res)=>{
 
 
 
-const l = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
-console.log(l)
+// const l = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
+// console.log(l)
 
 
 
@@ -166,5 +222,5 @@ console.log(l)
 
 
 module.exports = {
-    register, login , refreshToken , logout , resetPassword
+    register, login , refreshToken , logout , resetPassword , sendOTP ,verifyNum, forgotPass
 }

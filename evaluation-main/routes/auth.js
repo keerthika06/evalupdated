@@ -9,6 +9,10 @@ router.post('/login',AuthController.login)
 router.post('/refresh-token', AuthController.refreshToken)
 router.post('/logout',AuthController.logout)
 router.post('/resetPassword',AuthController.resetPassword)
+router.get('/sendOTP',AuthController.sendOTP)
+router.post('/verifyNum',AuthController.verifyNum,AuthController.forgotPass)
+
+
 
 //router.post('/logout', AuthController.logout)
 

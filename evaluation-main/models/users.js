@@ -8,7 +8,8 @@ const Schema = mongoose.Schema
 
 const userSchema = new Schema({
     MobileNumber:{
-        type: Number
+        type: Number,
+        unique : true
     },
     MPin : {
         type: String

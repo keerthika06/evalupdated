@@ -2,7 +2,7 @@
 const {response} = require('express')
 const Sites = require('../models/sites')
 const Cryptr = require('cryptr');
-
+const cryptr = new Cryptr("myTotallySecretKey");
 //show the list of sites
 const index = (req,res,next)=>{
     Sites.find()
@@ -47,7 +47,6 @@ const search = async (req, res) => {
         let search = req.query.search ;
 
         var regex = new RegExp(search, "i"); //case insensitive
-        console.log(regex)
         await Sites.find(
 
             { MobileNumber: req.user.MobileNumber, $text: { $search: regex } },
@@ -103,15 +102,15 @@ const searchSector = async (req, res) => {
 
 
 //updateSiteBYid
-const updateSiteById = async (req,res) =>{
-    try {
-        const response = await Sites.findByIdAndUpdate(req.params.id, req.body)
-        res.send(response)
-    }
-    catch(error){
-        console.log(error)
-    }
-}
+// const updateSiteById = async (req,res) =>{
+//     try {
+//         const response = await Sites.findByIdAndUpdate(req.params.id, req.body)
+//         res.send(response)
+//     }
+//     catch(error){
+//         console.log(error)
+//     }
+// }
 
 
 
@@ -144,6 +143,35 @@ const store = async (req, res, next)=>{
         })
     })
 }
+const editSite = async (req, res) => {
+    try {
+        const result = await Sites.find(
+            { _id: req.body._id },
+            { __v: 0, MobileNumber: 0 },
+            function (err) {
+                if (err) return res.sendStatus(401).send(err);
+            }
+        ).clone();
+        delete req.body._id;
+        delete req.body.MobileNumber;
+        if (req.body.SitePassword) {
+            req.body.SitePassword = await cryptr.encrypt(req.body.SitePassword);
+        }
+        const data = await Sites.findByIdAndUpdate(
+            { _id: result[0]._id },
+            req.body,
+            function (err) {
+                if (err) console.log(err);
+            }
+        ).clone();
+        //console.log(data)
+        data.SitePassword = await cryptr.decrypt(data.SitePassword);
+        res.send(data);
+    } catch (err) {
+         res.json({ message: "abc" });
+    }
+};
+
 
 
 //************************************************** *
@@ -175,6 +203,6 @@ const store = async (req, res, next)=>{
 //     })
 // }
 module.exports = {
-    index,show,store,updateSiteById,search,searchSector
+    index,show,store,editSite,search,searchSector
 
 }

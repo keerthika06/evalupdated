@@ -1,8 +1,10 @@
 const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const otpGenerator = require('otp-generator')
+//const otpGenerator = require('otp-generator')
 const speakeasy=require("speakeasy")
+
+//function to register a user.
 const register = ( req,res,next) => {
     bcrypt.hash(req.body.MPin.toString(),10, function(err, hashedPass){
         if(err) {
@@ -29,6 +31,9 @@ const register = ( req,res,next) => {
     })
 
 }
+
+
+//function to login an user.
 const login = (req,res,next)=>{
     var MobileNumber = req.body.MobileNumber
     var MPin = req.body.MPin
@@ -78,19 +83,7 @@ const login = (req,res,next)=>{
     })
 }
 
-// const logout = (req,res,next)=>{
-//     try {
-//         req.session.destroy()
-//         res.redirect('/register')
-
-//     }
-//     catch(error){
-//         console.log(error.message)
-//     }
-
-// }
-
-
+//function to generate a refreh token
 const refreshToken = (req,res,next)=> {
     const refreshToken = req.body.refreshToken
     jwt.verify(refreshToken, 'refreshtokensecret', function(err,decode) {
@@ -115,6 +108,8 @@ const refreshToken = (req,res,next)=> {
 //     const 
 // }
 
+
+//function to logout an user.
 let logout = async (req, res) => {
     try {
         
@@ -139,7 +134,7 @@ let logout = async (req, res) => {
 };
 
 
-
+//function to generate OTP.
 const sendOTP = async (req, res) => {
     try {
         const secret = speakeasy.generateSecret({ length: 10 });
@@ -194,7 +189,7 @@ let forgotPass = async (req, res) => {
 };
 
 
-
+//function to reset the password
 let resetPassword = async(req,res)=>{
     try {
                 hashedPass = await bcrypt.hash(req.body.MPin,10)
@@ -219,7 +214,7 @@ let resetPassword = async(req,res)=>{
 
 
 
-
+//export all the functions
 
 module.exports = {
     register, login , refreshToken , logout , resetPassword , sendOTP ,verifyNum, forgotPass

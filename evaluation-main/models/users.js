@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 //forgot passwordddddddddddddddddddd
 // const Joi = require('joi')
 
-
+//User Schema
 const userSchema = new Schema({
     MobileNumber:{
         type: Number,

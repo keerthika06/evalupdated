@@ -32,6 +32,7 @@ const show = (req, res, next)=>{
 })
 }) 
 }
+// to add the user
 const store = async (req, res, next)=>{
     let user = new User({
         MobileNumber: req.body.MobileNumber,
@@ -51,7 +52,7 @@ const store = async (req, res, next)=>{
     })
 }
 
-//update 
+//update the user 
 const update = (req,res,next) =>{
     let MobileNumber = req.body.MobileNumber
     let updatedData = ({
@@ -71,34 +72,6 @@ const update = (req,res,next) =>{
 
     })
 }
-
-
-
-//logout
-// const logout = (req,res) =>{
-//     if(req.headers && req.headers.authorization){
-//         console.log(req.headers.authorization)
-//         res.send('ok')
-//     }
-// }
-
-// const logout = async (req,res)=> {
-//     if(req.headers && req.headers.authorization) {
-//         const token = req.headers.authorization.split(' ')[1]
-//         if(!token){
-//             return res.status(401).json({sucess:false, message: 'Authorization fail'})
-//         }
-//         const result = await User.findOneAndUpdate({RefreshToken:token},{RefreshToken:""})
-//         if(result) return res.send("logged out")
-//         // const tokens = req.user.tokens
-//        // const newTokens = tokens(t => t !== token)
-//        console.log(result)
-
-//        // await User.findByIdAndUpdate(req.user._id, {tokens : newTokens})
-//         res.json({sucess: true ,message : 'sign out sucessfully'})
-//     }
-// }
-
 
 
 

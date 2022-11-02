@@ -4,6 +4,9 @@ const Sites = require('../models/sites')
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr("myTotallySecretKey");
 //show the list of sites
+
+
+//function to get all sites
 const index = (req,res,next)=>{
     Sites.find()
     .then(response =>{
@@ -38,7 +41,7 @@ const show = (req, res, next)=>{
 })
 }
 
-//search function
+//search function to find the user
 
 const search = async (req, res) => {
 
@@ -70,13 +73,13 @@ const search = async (req, res) => {
     }
 
 };
-//search sector
+//search by sector- function to display all the user under the same sector.
 const searchSector = async (req, res) => {
     try {
-        let sector = req.body.sector;
+        let sector = req.body.Sector;
         await Sites.find(
             {
-                $and: [{ sector: sector }, { MobileNumber: req.user.MobileNumber }],
+                $and: [{ Sector: sector }, { MobileNumber: req.user.MobileNumber }],
             },
             { __v: 0 },
             function (err, documents) /*callback*/ {
@@ -116,7 +119,7 @@ const searchSector = async (req, res) => {
 
 
 
-//to add sites
+// function to add sites
 const store = async (req, res, next)=>{
 
     const cryptr = new Cryptr(process.env.SECRET);
@@ -143,6 +146,8 @@ const store = async (req, res, next)=>{
         })
     })
 }
+
+//function to edit the site
 const editSite = async (req, res) => {
     try {
         const result = await Sites.find(
@@ -166,9 +171,9 @@ const editSite = async (req, res) => {
         ).clone();
         //console.log(data)
         data.SitePassword = await cryptr.decrypt(data.SitePassword);
-        res.send(data);
+        return res.send(data);
     } catch (err) {
-         res.json({ message: "abc" });
+         res.json({ message: "User updated sucessfully" });
     }
 };
 
@@ -202,6 +207,8 @@ const editSite = async (req, res) => {
 
 //     })
 // }
+
+//export all the functions
 module.exports = {
     index,show,store,editSite,search,searchSector
 

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+
+//User Schema
 const userSchema = new Schema({
     MobileNumber: {
         type:Number,

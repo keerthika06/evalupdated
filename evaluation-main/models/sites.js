@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-
+//Site schema
 const siteSchema = new Schema({
     MobileNumber: {
         type: Number

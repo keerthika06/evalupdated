@@ -16,7 +16,7 @@ router.get("/search", authenticate, siteController.search);
 router.get("/searchSector", authenticate, siteController.searchSector);
 
 //updatebyid
-router.put('/editSite',authenticate,siteController.editSite)
+router.put('/editSite', authenticate, siteController.editSite)
 
 
 module.exports = router 
